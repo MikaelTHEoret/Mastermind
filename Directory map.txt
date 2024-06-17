@@ -1,0 +1,23 @@
+chatgpt_sandbox/
+├── api/
+│   └── openai_integration.py
+├── database/
+│   └── schema.sql
+├── expansions/
+│   └── expansion_framework.py
+├── logging/
+│   └── logging_system.py
+├── permissions/
+│   └── permission_manager.py
+├── scripts/
+│   └── script_execution_engine.py
+├── ui/
+│   ├── chat_interface.py
+│   ├── config_dialog.py
+│   ├── main_window.py
+│   └── permission_dialog.py
+├── config.txt
+├── main.py
+├── permissions.txt
+├── sandbox.log
+└── README.md

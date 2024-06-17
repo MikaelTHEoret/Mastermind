@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS Log (
+    id INTEGER PRIMARY KEY,
+    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    user TEXT,
+    action TEXT,
+    details TEXT
+);
