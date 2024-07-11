@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-box">
+            <h2>Customization</h2>
+            <textarea id="user-input" rows="3" placeholder="Type your message here..."></textarea>
+            <button id="send-btn">Send</button>
+            <h2>Response:</h2>
+            <pre id="response"></pre>
+        </div>
+        <div class="script-box">
+            <h2>Run Script:</h2>
+            <textarea id="script-input" rows="5" placeholder="Paste your script here..."></textarea>
+            <button id="run-script-btn">Run Script</button>
+            <h2>Script Output:</h2>
+            <pre id="script-output"></pre>
+        </div>
+        <div class="file-box">
+            <h2>Modify File:</h2>
+            <input type="text" id="file-path" placeholder="File Path">
+            <textarea id="file-modifications" rows="5" placeholder="Modifications"></textarea>
+            <button id="modify-file-btn">Modify File</button>
+            <h2>Modification Status:</h2>
+            <pre id="modification-status"></pre>
+        </div>
+    </div>
+    <script>
+        document.getElementById('send-btn').addEventListener('click', function() {
+            const userInput = document.getElementById('user-input').value;
+            const token = localStorage.getItem('auth_token'); // Retrieve the token
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('run-script-btn').addEventListener('click', function() {
+            const scriptInput = document.getElementById('script-input').value;
+            const token = localStorage.getItem('auth_token'); // Retrieve the token
+
+            fetch('/run_script', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ script: scriptInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('script-output').innerText = data.output || data.error;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        document.getElementById('modify-file-btn').addEventListener('click', function() {
+            const filePath = document.getElementById('file-path').value;
+            const fileModifications = document.getElementById('file-modifications').value;
+            const token = localStorage.getItem('auth_token'); // Retrieve the token
+
+            fetch('/modify_file', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ path: filePath, modifications: fileModifications })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('modification-status').innerText = data.message;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

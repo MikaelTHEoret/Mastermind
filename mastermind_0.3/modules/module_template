@@ -1,0 +1,8 @@
+from flask import request, jsonify
+
+def init_app(app):
+    @app.route('/module_template/example_endpoint', methods=['POST'])
+    def example_endpoint():
+        # Example endpoint implementation
+        data = request.json.get('data')
+        return jsonify({'status': 'success', 'data': data})

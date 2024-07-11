@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="chat-box">
+            <h2>Customization</h2>
+            <textarea id="user-input" rows="3" placeholder="Type your message here..."></textarea>
+            <button id="send-btn">Send</button>
+            <h2>Response:</h2>
+            <pre id="response"></pre>
+        </div>
+        <div class="script-box">
+            <h2>Run Script:</h2>
+            <textarea id="script-input" rows="5" placeholder="Paste your script here..."></textarea>
+            <button id="run-script-btn">Run Script</button>
+            <h2>Script Output:</h2>
+            <pre id="script-output"></pre>
+        </div>
+        <div class="file-box">
+            <h2>Modify File:</h2>
+            <input type="text" id="file-path" placeholder="File Path">
+            <textarea id="file-modifications" rows="5" placeholder="Modifications"></textarea>
+            <button id="modify-file-btn">Modify File</button>
+            <h2>Modification Status:</h2>
+            <pre id="modification-status"></pre>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

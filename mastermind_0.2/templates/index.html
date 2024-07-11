@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Assistant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .menu-bar {
+            background-color: #333;
+            overflow: hidden;
+        }
+        .menu-bar a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu-bar .dropdown {
+            float: left;
+            overflow: hidden;
+        }
+        .menu-bar .dropdown .dropbtn {
+            font-size: 16px; 
+            border: none;
+            outline: none;
+            color: white;
+            padding: 14px 16px;
+            background-color: inherit;
+            font-family: inherit;
+            margin: 0;
+        }
+        .menu-bar a:hover, .menu-bar .dropdown:hover .dropbtn {
+            background-color: #ddd;
+            color: black;
+        }
+        .menu-bar .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .menu-bar .dropdown-content a {
+            float: none;
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .menu-bar .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .menu-bar .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-bar">
+        <div class="dropdown">
+            <button class="dropbtn">File 
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="#" onclick="loadModule()">Load Module</a>
+                <a href="#" onclick="showActiveModules()">Active Modules</a>
+                <a href="#" onclick="showIntegratedModules()">Integrated Modules</a>
+                <a href="#" onclick="showConfiguredModules()">Configured Modules</a>
+            </div>
+        </div> 
+        <div class="dropdown">
+            <button class="dropbtn">Settings 
+                <i class="fa fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="#" onclick="showCustomizationOptions()">Customization Options</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div id="login" style="display: none;">
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username"><br>
+            <input type="password" id="password" placeholder="Password"><br>
+            <button onclick="login()">Login</button>
+        </div>
+
+        <div id="customization" style="display: none;">
+            <h2>Customization</h2>
+            <label for="permission">Require Permission for Actions:</label>
+            <select id="permission" onchange="setPermission()">
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select>
+            <label for="system_message">System Message:</label>
+            <input type="text" id="system_message" onchange="setSystemMessage()" value="You are a helpful assistant.">
+            <label for="allowed_actions">Allowed Actions (comma separated):</label>
+            <input type="text" id="allowed_actions" onchange="setAllowedActions()" value="chat,run_script,modify_file">
+        </div>
+
+        <textarea id="input" rows="4" cols="50"></textarea><br>
+        <button onclick="sendMessage()">Send</button>
+        <h2>Response:</h2>
+        <pre id="response"></pre>
+
+        <h2>Run Script:</h2>
+        <textarea id="script" rows="10" cols="50"></textarea><br>
+        <button onclick="runScript()">Run Script</button>
+        <h2>Script Output:</h2>
+        <pre id="scriptOutput"></pre>
+
+        <h2>Modify File:</h2>
+        <input type="text" id="filePath" placeholder="File Path"><br>
+        <textarea id="modifications" rows="4" cols="50" placeholder="Modifications"></textarea><br>
+        <button onclick="modifyFile()">Modify File</button>
+        <h2>Modification Status:</h2>
+        <pre id="modificationStatus"></pre>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('input').value;
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ input: input })
+            });
+            const data = await response.json();
+            document.getElementById('response').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function runScript() {
+            const script = document.getElementById('script').value;
+            const response = await fetch('/run_script', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ script: script })
+            });
+            const data = await response.json();
+            document.getElementById('scriptOutput').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function modifyFile() {
+            const filePath = document.getElementById('filePath').value;
+            const modifications = document.getElementById('modifications').value;
+            const response = await fetch('/modify_file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ file_path: filePath, modifications: modifications })
+            });
+            const data = await response.json();
+            document.getElementById('modificationStatus').innerText = JSON.stringify(data, null, 2);
+        }
+
+        async function setPermission() {
+            const permission = document.getElementById('permission').value;
+            const response = await fetch('/permissions/set_permission', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ permission: permission === 'true' })
+            });
+            const data = await response.json();
+            console.log('Permission set to:', data.permission_required);
+        }
+
+        async function setSystemMessage() {
+            const system_message = document.getElementById('system_message').value;
+            const response = await fetch('/ui_config/set_system_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ system_message: system_message })
+            });
+            const data = await response.json();
+            console.log('System message set to:', data.system_message);
+        }
+
+        async function setAllowedActions() {
+            const allowed_actions = document.getElementById('allowed_actions').value.split(',');
+            const response = await fetch('/ui_config/set_allowed_actions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ allowed_actions: allowed_actions })
+            });
+            const data = await response.json();
+            console.log('Allowed actions set to:', data.allowed_actions);
+        }
+
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username: username, password: password })
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('customization').style.display = 'block';
+                alert('Login successful');
+            } else {
+                alert('Login failed');
+            }
+        }
+
+        function showCustomizationOptions() {
+            document.getElementById('customization').style.display = 'block';
+        }
+
+        function loadModule() {
+            alert('Load Module functionality to be implemented.');
+        }
+
+        function showActiveModules() {
+            alert('Show Active Modules functionality to be implemented.');
+        }
+
+        function showIntegratedModules() {
+            alert('Show Integrated Modules functionality to be implemented.');
+        }
+
+        function showConfiguredModules() {
+            alert('Show Configured Modules functionality to be implemented.');
+        }
+    </script>
+</body>
+</html>
