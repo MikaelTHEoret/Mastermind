@@ -1,0 +1,10 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-background {
+    background-color: theme('colors.background'); /* Fixed circular dependency */
+  }
+}

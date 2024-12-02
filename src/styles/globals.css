@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+
+    --primary: 270 50% 60%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 260 50% 50%;
+    --secondary-foreground: 210 40% 98%;
+
+    --accent: 280 50% 50%;
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --ring: 216 34% 17%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.holographic-text {
+  @apply font-mono text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400;
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.nexus-glow {
+  filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+}
+
+.grid-background {
+  background-image: linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}

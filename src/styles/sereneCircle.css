@@ -1,0 +1,20 @@
+
+:root {
+  --primary-color: #8cb6e6;
+  --secondary-color: #00e5ff;
+  --accent-color: #d7b4f3;
+  --glow-effect: 0 0 10px var(--primary-color);
+}
+body {
+  background: radial-gradient(circle, var(--primary-color), var(--secondary-color));
+  color: #ffffff;
+}
+button {
+  border: 1px solid var(--accent-color);
+  background-color: var(--primary-color);
+  box-shadow: var(--glow-effect);
+  transition: transform 0.3s ease-in-out;
+}
+button:hover {
+  transform: scale(1.05);
+}

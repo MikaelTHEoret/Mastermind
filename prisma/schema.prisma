@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  level     String
+  message   String
+  context   String?
+  source    String
+}
+
+model Interaction {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  type      String
+  content   String
+  response  String
+  success   Boolean
+  metadata  String?
+}
+
+model Preference {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
